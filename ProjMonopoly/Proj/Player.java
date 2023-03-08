@@ -4,10 +4,15 @@ import java.net.*;
 import java.io.*;
 
 public class Player {
+
+    static Socket socket = null;
+    static PrintWriter out = null;
+    static BufferedReader in = null;
+
+    public static void PlayButton() throws IOException {
+        out.println("Play");
+    }
     public static void main(String[] args) throws IOException {
-        Socket socket = null;
-        PrintWriter out = null;
-        BufferedReader in = null;
 
         try {
             socket = new Socket("localhost", 4444); // connexion au serveur

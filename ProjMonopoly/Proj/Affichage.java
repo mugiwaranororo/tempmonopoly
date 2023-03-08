@@ -8,6 +8,9 @@ import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.net.Socket;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JButton;
@@ -71,7 +74,12 @@ class Affichage extends JFrame {
         playButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                System.out.println("Button clicked!");
+                try {
+                    System.out.println("Play button clicked 1");
+                    Player.PlayButton();
+                } catch (IOException e1) {
+                    System.err.println("Error while sending message to server: " + e1.getMessage());
+                }
             }
         });
 
