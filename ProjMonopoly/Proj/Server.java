@@ -36,7 +36,7 @@ class ServerThread implements Runnable {
     private Socket socket = null;
     private int playerId = -1;
     private int playerCount = -1;
-    private static int currentPlayer = 0;
+    public static int currentPlayer = 0;
     private static final Object lock = new Object();
 
     public ServerThread(Socket socket, int playerId, int playerCount) {

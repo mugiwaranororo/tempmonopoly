@@ -11,7 +11,8 @@ server:
 
 player:
 		$(JC) $(JFLAGS) Proj/Player.java
+		java Proj.Player
 
 
 clean:
-		$(RM) *.class
+		$(RM) Proj/*.class

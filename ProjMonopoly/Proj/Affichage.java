@@ -9,20 +9,23 @@ import java.awt.event.ComponentEvent;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.net.Socket;
+import java.util.Random;
+
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JButton;
+import java.awt.Color;
 
 class Affichage extends JFrame {
-    private static final int WINDOW_WIDTH = 800;
+    public static final int WINDOW_WIDTH = 800;
     private static final int WINDOW_HEIGHT = 600;
     private Image image;
     private int imageWidth;
     private int imageHeight;
+    public static int x = 0;
+    public static int y = 0;
 
-    public Affichage() {
+    public Affichage(int playerpos) {
         setTitle("Monopoly");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(new Dimension(WINDOW_WIDTH, WINDOW_HEIGHT));
@@ -39,6 +42,8 @@ class Affichage extends JFrame {
             public void paintComponent(Graphics g) {
                 super.paintComponent(g);
                 g.drawImage(image, 0, 0, getWidth(), getHeight(), this);
+                g.setColor(Color.RED);
+                g.fillOval(x, y, 30, 30);
             }
 
             @Override
@@ -77,6 +82,9 @@ class Affichage extends JFrame {
                 try {
                     System.out.println("Play button clicked 1");
                     Player.PlayButton();
+                    panel.repaint();
+
+                    
                 } catch (IOException e1) {
                     System.err.println("Error while sending message to server: " + e1.getMessage());
                 }
