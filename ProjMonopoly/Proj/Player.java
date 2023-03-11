@@ -2,27 +2,19 @@ package Proj;
 
 import java.net.*;
 import java.io.*;
-import java.util.Random;
 
 public class Player {
-    static int playerId = -1;
     static Socket socket = null;
     static PrintWriter out = null;
     static BufferedReader in = null;
-    static int playerpos = 0;
-    static int x = 0;
-    static int y = 0;
-    
+    public Affichage affichage;
+
     public static void PlayButton() throws IOException {
-        if (playerId == playerId) {
-            Random rand = new Random();
-            int x = rand.nextInt(800);
-            int y = rand.nextInt(600);
-            Affichage.x = x;
-            Affichage.y = y;
-            out.println("Play");
-        }
-        out.println("Play but wrong player");
+        System.out.println("Player.PlayButton  active");
+    }
+
+    public Player(Affichage affichage) {
+        this.affichage = affichage;
     }
     public static void main(String[] args) throws IOException {
 
@@ -37,9 +29,6 @@ public class Player {
             System.err.println("Erreur lors de la connexion au serveur : " + e.getMessage());
             System.exit(1);
         }
-
-        Affichage serv = new Affichage(playerpos);
-        serv.setVisible(true);
 
         BufferedReader stdIn = new BufferedReader(new InputStreamReader(System.in));
         String userInput;

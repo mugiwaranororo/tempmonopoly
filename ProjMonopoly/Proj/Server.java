@@ -2,10 +2,17 @@ package Proj;
 
 import java.net.*;
 import java.io.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Server {
-    public static void main(String[] args) throws IOException {
-        int PLAYER_MAX = 2;
+
+    static List<Player> players = new ArrayList<Player>();
+    static List<Integer> positions = new ArrayList<Integer>();
+    int PLAYER_MAX = 2;
+    static int currentPlayer = 0;
+
+    public void Connection() throws IOException {
         ServerSocket serverSocket = null;
         boolean listening = true;
         int playerCount = 0;
@@ -19,7 +26,8 @@ public class Server {
         int temp = 0;
         while (listening) {
             if (playerCount < PLAYER_MAX) {
-                new Thread(new ServerThread(serverSocket.accept(), playerCount, PLAYER_MAX)).start();
+                ThreadPlayer Player = new ThreadPlayer(serverSocket.accept(), playerCount, PLAYER_MAX);
+                new Thread(Player).start();
                 playerCount++;
             }
             else if (temp == 0) {
@@ -30,47 +38,60 @@ public class Server {
 
         serverSocket.close();
     }
-}
 
-class ServerThread implements Runnable {
-    private Socket socket = null;
-    private int playerId = -1;
-    private int playerCount = -1;
-    public static int currentPlayer = 0;
-    private static final Object lock = new Object();
+    public class ThreadPlayer implements Runnable {
+        private Socket socket = null;
+        private int playerId = -1;
+        private int playerCount = -1;
+        private final Object lock = new Object();
+        int x = 0;
+        int y = 0;
 
-    public ServerThread(Socket socket, int playerId, int playerCount) {
-        this.playerCount = playerCount;
-        this.socket = socket;
-        this.playerId = playerId;
+        public ThreadPlayer(Socket socket, int playerId, int playerCount) {
+            this.playerCount = playerCount;
+            this.socket = socket;
+            this.playerId = playerId;
+            players.add(new Player(new Affichage(playerId, PLAYER_MAX)));
+            positions.add(0);
+            if (playerId+1 == playerCount) {
+                for (int i = 0; i < players.size(); i++) {
+                    System.out.println("Player " + i + " is at position " + positions.get(i));
+                }
+            }
+        }
+    
+        public void run() {
+            try {
+                PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
+                BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+    
+                String inputLine, outputLine;
+                while ((inputLine = in.readLine()) != null) {
+                    synchronized (lock) {
+                        if (playerId == currentPlayer) {
+                            System.out.println("Player " + playerId + " sent: " + inputLine);
+                            outputLine = "It's your turn.";
+                            currentPlayer = (currentPlayer + 1) % playerCount;
+                        }
+                        else {
+                            System.out.println("Player " + playerId + " sent: " + inputLine+ " but it's not his turn.");
+                            outputLine = "It's not your turn.";
+                        }
+                    }
+                    out.println(outputLine);
+                }
+    
+                out.close();
+                in.close();
+                socket.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+           }
+        }   
     }
 
-    public void run() {
-        try {
-            PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
-            BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-
-            String inputLine, outputLine;
-            while ((inputLine = in.readLine()) != null) {
-                synchronized (lock) {
-                    if (playerId == currentPlayer) {
-                        System.out.println("Player " + playerId + " sent: " + inputLine);
-                        outputLine = "It's your turn.";
-                        currentPlayer = (currentPlayer + 1) % playerCount;
-                    }
-                    else {
-                        System.out.println("Player " + playerId + " sent: " + inputLine+ " but it's not his turn.");
-                        outputLine = "It's not your turn.";
-                    }
-                }
-                out.println(outputLine);
-            }
-
-            out.close();
-            in.close();
-            socket.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }   
+    public static void main(String[] args) throws IOException {
+        Server server = new Server();
+        server.Connection();
+    }
 }
