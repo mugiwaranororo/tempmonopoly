@@ -54,7 +54,7 @@ public class Server {
             this.playerCount = playerCount;
             this.socket = socket;
             this.playerId = playerId;
-            players.add(new Player(playerId);
+            players.add(new Player(playerId, playerCount));
             positions.add(0);
             if (playerId+1 == playerCount) {
                 for (int i = 0; i < players.size(); i++) {
