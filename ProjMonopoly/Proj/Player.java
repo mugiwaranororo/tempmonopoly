@@ -2,24 +2,28 @@ package Proj;
 
 import java.net.*;
 import java.io.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Player {
     static Socket socket = null;
     static PrintWriter out = null;
     static BufferedReader in = null;
+    public List<Case> cases = new ArrayList<Case>();
+    public int sold = 5000;
+    public boolean bankrupt;
+    public boolean inJail = false;
+    public int jailcard = 0;
+    public int nbdoubles = 0;
     public Affichage affichage;
 
-    public static void PlayButton() throws IOException {
-        System.out.println("Player.PlayButton  active");
-    }
-
-    public Player(Affichage affichage) {
-        this.affichage = affichage;
+    public Player(int playerId, int playerCount) {
+        this.affichage = new Affichage(playerId, playerCount);
     }
     public static void main(String[] args) throws IOException {
 
         try {
-            socket = new Socket("localhost", 4444); // connexion au serveur
+            socket = new Socket("ibien.le-dauphin.tech", 51734); // connexion au serveur
             out = new PrintWriter(socket.getOutputStream(), true);
             in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
         } catch (UnknownHostException e) {
