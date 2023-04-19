@@ -56,6 +56,7 @@ public class Server {
             this.playerId = playerId;
             players.add(new Player(playerId, playerCount));
             positions.add(0);
+            players.get(playerId).Display();
             if (playerId+1 == playerCount) {
                 for (int i = 0; i < players.size(); i++) {
                     System.out.println("Player " + i + " is at position " + positions.get(i));

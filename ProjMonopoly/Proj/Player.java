@@ -16,10 +16,18 @@ public class Player {
     public int jailcard = 0;
     public int nbdoubles = 0;
     public Affichage affichage;
+    int playerId = -1;
+    int playerCount = -1;
+
+    public void Display() {
+        affichage = new Affichage(playerId, playerCount);
+    }
 
     public Player(int playerId, int playerCount) {
-        this.affichage = new Affichage(playerId, playerCount);
+        this.playerCount = playerCount;
+        this.playerId = playerId;
     }
+
     public static void main(String[] args) throws IOException {
 
         try {
